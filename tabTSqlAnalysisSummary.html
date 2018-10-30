@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="lib/VSS.SDK.min.js"></script>
+    <script type="text/javascript">
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformScripts: true,
+            moduleLoaderConfig: {
+                paths: {
+                    "enhancer": "scripts"
+                }
+            }
+        });
+
+        VSS.ready(() => {
+            require(["enhancer/status"], (statScript) => {
+
+                // This was inserted to resolve some errors but I never used it and do not know why I should
+                VSS.register(VSS.getContribution().id, () => {
+                    return {
+                        // Called when the active work item is modified
+                        onFieldChanged: (args) => {
+
+                        },
+
+                        // Called when a new work item is being loaded in the UI
+                        onLoaded: (args) => {
+
+                        },
+
+                        // Called when the active work item is being unloaded in the UI
+                        onUnloaded: (args) => {
+
+                        },
+
+                        // Called after the work item has been saved
+                        onSaved: (args) => {
+
+                        },
+
+                        // Called when the work item is reset to its unmodified state (undo)
+                        onReset: (args) => {
+
+                        },
+
+                        // Called when the work item has been refreshed from the server
+                        onRefreshed: (args) => {
+
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="css/summaryTab.css" />
+</head>
+
+<body>
+    <div class="task-contribution">
+        <span id="spanSumRes"></span>
+        <div id="warn">
+            <span id="titleSumWarn"></span>
+            <table id="tableSumWarn">
+                <tr>
+                    <th>Errors</th>
+                    <th>Warnings</th>
+                </tr>
+            </table>
+        </div>
+        <div id="declarations">
+            <span id="titleSumRes"></span>
+            <table id="tableSumRes">
+                <tr>
+                    <th>Functions</th>
+                    <th>Procedures</th>
+                    <th>Triggers</th>
+                    <th>Views</th>
+                    <th>Total</th>
+                </tr>
+            </table>
+        </div>
+        <span id="endSumRes"></span>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,79 @@
+#spanRes, #tableParam, #tableRes {
+    font-size: 1rem;
+}
+
+#tableParam th, #tableParam td {
+    text-align: left;
+    padding: 8px;
+}
+
+.containerStats, .containerGraphs, .containerDeclarations {
+    margin-bottom: 50px;
+}
+
+/* CONTAINER DEI PARAMETRI */
+.containerStats {
+    display: flex;
+    justify-content: left;
+    text-align: left;
+    position: relative;
+    width: 95%;
+    min-height: 250px;
+    height:100%;
+    padding-left: 2%;
+    margin-bottom: 1%;
+}
+
+#titleExt, #results {
+    position: relative;
+    width: 50%;
+    min-height: 250px;
+    height:100%;
+}
+
+/* CONTAINER DEI GRAFICI */
+.containerGraphs {
+    display: flex;
+    justify-content: space-around;
+    text-align: left;
+    align-items: center;
+    position: relative;
+    width: 95%;
+    min-height: 250px;
+    height:100%;
+    padding-left: 2%;
+    margin-bottom: 1%;
+}
+
+.pie-container, .hBar-container {
+    position: relative;
+    width: 50%;
+    min-height: 250px;
+    height:100%;
+}
+
+#pieGraph, #hBarGraph {
+    position: relative;
+    max-width: 640px;
+    width: 100%;
+    min-height: 250px;
+    height:100%;
+}
+
+/* CONTAINER DELLE DICHIARAZIONI */
+.containerDeclarations {
+    display: flex;
+    justify-content: left;
+    text-align: left;
+    position: relative;
+    width: 95%;
+    min-height: 250px;
+    height:100%;
+    padding-left: 2%;
+    margin-bottom: 1%;
+}
+
+#tableRes th, #tableRes td {
+    text-align: left;
+    padding: 8px;
+}

@@ -1,0 +1,119 @@
+{
+    "manifestVersion": 1,
+    "id": "build-release-task",
+    "name": "Raptors: T-Sql Analyzer Tool",
+    "version": "1.0.0",
+    "publisher": "raptors-cgn",
+    "public": false,
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "screenshots": [
+
+    ],
+    "scopes": [
+        "vso.build_execute",
+        "vso.work_write",
+        "vso.test_write"
+    ],
+    "description": "Calculate and create reports about T-Sql code.",
+    "categories": [
+        "Pipelines",
+        "Test Plans"
+    ],
+    "icons": {
+        "default": "images/extension-icon.png"
+    },
+    "tags": [
+        "code",
+        "code analysis",
+        "reports",
+        "sql",
+        "t-sql",
+        "analytics"
+    ],
+    "content": {
+        "details": {
+            "path": "Overview.md"
+        }
+    },
+    "repository": {
+        "type": "git",
+        "uri": "https://github.com/alessandrodalmas/AzureDevOps-Extension.git"
+    },
+    "files": [
+        {
+            "path": "images",
+            "addressable": true          
+        },
+        {
+            "path": "src/enhancer",
+            "addressable":true,
+            "packagePath": "scripts"
+        },
+        {
+            "path": "tabTSqlAnalysis.html",
+            "addressable": true
+        },
+        {
+            "path": "tabTSqlAnalysisSummary.html",
+            "addressable": true
+        },
+        {
+            "path": "src/Tasks",
+            "addressable": true,
+            "packagePath": "Tasks"
+        },
+        {
+            "path": "node_modules/vss-web-extension-sdk/lib",
+            "addressable": true,
+            "packagePath": "lib"
+        },
+        {
+            "path": "css",
+            "addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "t-sql-analyzer-task",
+            "type": "ms.vss-distributed-task.task",
+            "description":"T-Sql code metrics tool for CI",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "Tasks/TSqlAnalyzer"
+            }
+        },
+        {
+            "id": "t-sql-results-tab",
+            "type": "ms.vss-build-web.build-results-tab",
+            "description": "Tab of T-Sql Analysis results",
+            "targets": [
+                "ms.vss-build-web.build-results-view"
+            ],
+            "properties": {
+                "name": "T-Sql Analyzer",
+                 "uri": "tabTSqlAnalysis.html",
+                 "supportsTasks": ["06469d9b-b8cd-4a35-b7cd-f5051c158b62"]
+            }
+        },
+        {
+            "id": "t-sql-summary-results-section",
+            "type": "ms.vss-build-web.build-results-section",
+            "description": "Summary tab of T-Sql Analysis results",
+            "targets": [
+                ".t-sql-results-tab",
+                "ms.vss-build-web.build-results-summary-tab"
+            ],
+            "properties": {
+                 "name": "T-Sql Analyzer",
+                 "uri": "tabTSqlAnalysisSummary.html",
+                 "supportsTasks": ["06469d9b-b8cd-4a35-b7cd-f5051c158b62"]
+            }
+        }
+    ]
+}

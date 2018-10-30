@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2016",
+    "module": "amd",
+    "strict": true,
+    "moduleResolution": "node",
+    "types": [
+      "vss-web-extension-sdk",
+      "jquery",
+      "q"
+    ]
+  },
+  "files": [
+    "src/enhancer/status.ts",
+    "src/enhancer/tab.ts",
+    "src/enhancer/dump.ts"
+    //"src/Tasks/TSqlAnalyzer/index.ts"
+  ]
+}

@@ -1,0 +1,22 @@
+#spanSumRes, #warn, #declarations, #endSumRes {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+#tableSumWarn, #tableSumRes {
+    margin-top: 5px;
+}
+
+#tableSumWarn th, #tableSumWarn td, #tableSumRes th, #tableSumRes td {
+    text-align: left;
+    padding: 8px;
+    border: 1px dotted black;
+}
+
+#tableSumWarn td, #tableSumRes td {
+    font-size: 0.8rem;
+}
+
+#titleSumRes, #titleSumWarn {
+    font-weight: bold;
+}

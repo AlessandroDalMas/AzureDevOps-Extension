@@ -1,0 +1,29 @@
+{
+  "name": "vstx-sql",
+  "version": "1.0.0",
+  "description": "Visual Studio Extension for Pipelines",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p .",
+    "postbuild": "npm run package",
+    "package": "tfx extension create",
+    "clean": "rimraf ./dist && rimraf ./*.vsix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://servizicgn.visualstudio.com/Produzione/_git/SqlAnalyzer-DevOps"
+  },
+  "author": "Team Raptors",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^10.12.0"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^5.0.4",
+    "@types/jquery": "^2.0.51",
+    "@types/q": "1.5.1",
+    "azure-pipelines-task-lib": "^2.7.0",
+    "fs-extra": "^7.0.0",
+    "vss-web-extension-sdk": "^4.126.2"
+  }
+}

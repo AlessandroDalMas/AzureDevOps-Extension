@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="lib/VSS.SDK.min.js"></script>
+    <script src="scripts/Chart.min.js"></script>
+    <script type="text/javascript">
+        VSS.init({
+            explicitNotifyLoaded: true,
+            usePlatformScripts: true,
+            moduleLoaderConfig: {
+                paths: {
+                    "enhancer": "scripts"
+                }
+            }
+        });
+
+        VSS.ready(() => {
+            require(["enhancer/tab"], (tabScript) => {
+
+                // This was inserted to resolve some errors but I never used it and do not know why I should
+                VSS.register(VSS.getContribution().id, () => {
+                    return {
+                        // Called when the active work item is modified
+                        onFieldChanged: (args) => {
+
+                        },
+
+                        // Called when a new work item is being loaded in the UI
+                        onLoaded: (args) => {
+
+                        },
+
+                        // Called when the active work item is being unloaded in the UI
+                        onUnloaded: (args) => {
+
+                        },
+
+                        // Called after the work item has been saved
+                        onSaved: (args) => {
+
+                        },
+
+                        // Called when the work item is reset to its unmodified state (undo)
+                        onReset: (args) => {
+
+                        },
+
+                        // Called when the work item has been refreshed from the server
+                        onRefreshed: (args) => {
+
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <link rel="stylesheet" href="css/tab.css" />
+</head>
+
+<body style="overflow: scroll;">
+    <div class="task-contribution">
+        <span id="spanRes">
+
+        </span>
+
+        <div class="containerStats">
+            <div id="titleExt">
+                <h2>Params of analysys</h2>
+                <table id="tableParam">
+                    <tr>
+                        <th>Name</th>
+                        <th>Value</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="containerGraphs">
+            <div class="pie-container">
+                <div class="pieGraph">
+
+                </div>
+            </div>
+            <div class="hBar-container">
+                <div class="hBarGraph">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="containerDeclarations">
+            <div id="results">
+                <h2>Declarations analyzed</h2>
+                <table id="tableRes">
+                    <tr>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>CC</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
