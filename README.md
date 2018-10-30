@@ -20,8 +20,8 @@ AzureDevOps-Extension is an example for integration in pipelines about T-SQL Ana
 
 # Build and Test
 
-1. tsc -p . --resolveJsonModule
-2. tfx extension create --manifests vss-extension.json --rev-version
+1. ```tsc -p . --resolveJsonModule```
+2. ```tfx extension create --manifests vss-extension.json --rev-version```
 
 # Known problems
 
