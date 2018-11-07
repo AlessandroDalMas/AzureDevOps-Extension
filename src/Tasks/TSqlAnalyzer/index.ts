@@ -3,8 +3,10 @@ import trm = require('azure-pipelines-task-lib/toolrunner');
 import fs = require('fs-extra');
 import * as data from './task.json';
 
-let levelError: any;
-let levelWarn: any;
+let levelError: string;
+let levelWarn: string;
+let tempLvErr: number = 0;
+let tempLvWarn: number = 0;
 
 // Rebuild the paths
 const taskJson = (<any>data);
@@ -16,11 +18,34 @@ const SQLAnalysisPath = tl.getVariable("Agent.WorkFolder") +
     "\\_tasks\\" + taskPath + "\\" + versionString + "\\src";
 const SQLAnalysisDll = SQLAnalysisPath + "\\SqlAnalyzerDevOps.dll";
 
+function isNormalInteger(str: string) {
+    return /^\+?(0|[1-9]\d*)$/.test(str);
+}
+
 /**
  * Function executed at startup.
  */
 function run() {
     try {
+        // Testing parameters levels
+        levelError = tl.getInput("levelError");
+        levelWarn = tl.getInput("levelWarn");
+        
+        // Test input threshold isNaN
+        if (!isNormalInteger(levelError)) {
+            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold error' is not a number");
+        } else {
+            tempLvErr = parseInt(levelError);
+        }
+        if (!isNormalInteger(levelWarn)) {
+            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold warning' is not a number");
+        } else {
+            tempLvWarn = parseInt(levelWarn);
+        }
+        if (tempLvWarn <= 2 || tempLvErr < 2 || tempLvWarn > tempLvErr) {
+            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold warning' should be bigger than one and lower of 'Threshold error'.");
+        }
+        
         // Test build area
         if (process.platform === 'win32') {
             version();
@@ -31,23 +56,6 @@ function run() {
             tl.setResult(tl.TaskResult.Failed, "Error: agent 'darwin' not supported");
         } else {
             tl.setResult(tl.TaskResult.Failed, "Error: agent '" + process.platform + "' not supported");
-        }
-
-        levelError = tl.getInput("levelError");
-        levelWarn = tl.getInput("levelWarn");
-        // Test input threshold isNaN
-        if (isNaN(levelError)) {
-            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold error' is not a number");
-        } else {
-            levelError = parseInt(levelError);
-        }
-        if (isNaN(levelWarn)) {
-            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold warning' is not a number");
-        } else {
-            levelWarn = parseInt(levelWarn);
-        }
-        if (levelWarn <= 2 || levelError < 2 || levelWarn > levelError) {
-            tl.setResult(tl.TaskResult.Failed, "The parameter 'Threshold warning' should be bigger than one and lower of 'Threshold error'.");
         }
     }
     catch (err) {
@@ -104,19 +112,19 @@ function execute() {
 
     try {
         // Look for JSON result file
-        let files = tl.findMatch(SQLAnalysisPath, ["[0-9][0-9]-[0-9][0-9]-[0-9][0-9][0-9][0-9] [0-9][0-9]-[0-9][0-9]-[0-9][0-9].json"]);
-        files.forEach(element => {
+        let files = tl.findMatch(SQLAnalysisPath, ["[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]-[0-9][0-9]-[0-9][0-9].json"]);
 
-            if (files.length == 0) {
-                console.log("No JSON found.");
-                tl.setResult(tl.TaskResult.Failed, "Analysis output not found");
-                return;
-            }
+        if (files.length == 0) {
+            console.log("No JSON found.");
+            tl.setResult(tl.TaskResult.Failed, "Analysis output not found");
+            return;
+        }
 
-            // The first file should be the only one we are looking for
-            elaborateFile(files[0]);
+        // The last file should be the one we are looking for.
+        // Other analysis could have generated other files and
+        // the folder can be not cleaned.
+        elaborateFile(files[files.length -1]);
 
-        });
     } catch (err) {
         console.log("There was an error while publishing and looking for results.");
         console.log(err);
