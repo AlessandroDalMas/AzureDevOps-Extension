@@ -10,18 +10,19 @@ AzureDevOps-Extension is an example for integration in pipelines about T-SQL Ana
 
 ##	Software dependencies
 
-1. nodejs: ^10.12.0
+1. nodejs
 2. azure-pipelines-task-lib: ^2.7.0
-3. vss-web-extension-sdk: ^4.126.2
+3. vss-web-extension-sdk: ^4.126.2 (there is a new package available but his documentation is still under review: azure-devops-extension-sdk)
 
 ##  Latest releases
 
-1. 1.0 - 30-10-2018.
+1. 1.0.50 - 07-11-2018
+2. 1.0.0 - 30-10-2018.
 
 # Build and Test
 
-1. ```tsc -p . --resolveJsonModule```
-2. ```tfx extension create --manifests vss-extension.json --rev-version```
+1. Compile all ts with: ```tsc -p . --resolveJsonModule```
+2. Build the vsix file: ```tfx extension create --manifests vss-extension.json --rev-version```
 
 # Known problems
 
@@ -30,12 +31,10 @@ AzureDevOps-Extension is an example for integration in pipelines about T-SQL Ana
 3. Compiling errors from typescript, but it still compiles
 4. I was not able to use the charts offered by microsoft, so imported Chartjs library
 5. Related to point 4, there are typescript errors because I did not import the types
-6. To compile index.ts you need to modify the tsconfig.json. Need to uncomment the file, comment other files, and change module to "commonjs"
 
 # To be implemented
 
 1. Missing unit test
 2. Resolve typescript conflicts
-3. Resolve different compiling rules for task and tabs
-4. vss-extension.json to be updated
-5. Migration to new azure web extension library
+3. vss-extension.json to be updated
+4. Migration to new azure web extension library
