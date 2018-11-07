@@ -13,7 +13,5 @@
   "files": [
     "src/enhancer/status.ts",
     "src/enhancer/tab.ts",
-    "src/enhancer/dump.ts"
-    //"src/Tasks/TSqlAnalyzer/index.ts"
   ]
 }
