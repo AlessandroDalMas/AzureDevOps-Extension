@@ -20,8 +20,9 @@ AzureDevOps-Extension is an example for integration in pipelines about T-SQL Ana
 
 ##  Latest releases
 
-1. 1.0.50 - 07-11-2018
-2. 1.0.0 - 30-10-2018.
+1. 1.1.4 - 12-03-2019
+2. 1.0.50 - 07-11-2018
+3. 1.0.0 - 30-10-2018.
 
 # Build and Test
 
