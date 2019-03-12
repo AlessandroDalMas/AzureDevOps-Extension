@@ -5,9 +5,9 @@
     "strict": true,
     "moduleResolution": "node",
     "types": [
-      "vss-web-extension-sdk",
       "jquery",
-      "q"
+      "q",
+      "vss-web-extension-sdk",
     ]
   },
   "files": [

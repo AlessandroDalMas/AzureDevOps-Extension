@@ -1,31 +1,26 @@
 {
     "manifestVersion": 1,
-    "id": "build-release-task",
-    "name": "Raptors: T-Sql Analyzer Tool",
-    "version": "1.0.0",
-    "publisher": "raptors-cgn",
+    "id": "build-pipeline-task",
+    "name": "T-Sql Analyzer Tool",
+    "version": "1.1.4",
+    "publisher": "aledalmas",
+    "description": "Calculate and create reports about T-Sql code.",
     "public": false,
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services"
         }
     ],
-    "screenshots": [
-
-    ],
-    "scopes": [
-        "vso.build_execute",
-        "vso.work_write",
-        "vso.test_write"
-    ],
-    "description": "Calculate and create reports about T-Sql code.",
-    "categories": [
-        "Pipelines",
-        "Test Plans"
-    ],
     "icons": {
         "default": "images/extension-icon.png"
     },
+    "scopes": [
+        "vso.build_execute",
+        "vso.work_write"
+    ],
+    "categories": [
+        "Azure Pipelines"
+    ],
     "tags": [
         "code",
         "code analysis",
@@ -34,6 +29,7 @@
         "t-sql",
         "analytics"
     ],
+    "screenshots": [],
     "content": {
         "details": {
             "path": "Overview.md"
@@ -54,11 +50,11 @@
             "packagePath": "scripts"
         },
         {
-            "path": "tabTSqlAnalysis.html",
+            "path": "tab.html",
             "addressable": true
         },
         {
-            "path": "tabTSqlAnalysisSummary.html",
+            "path": "tabSummary.html",
             "addressable": true
         },
         {
@@ -97,8 +93,8 @@
             ],
             "properties": {
                 "name": "T-Sql Analyzer",
-                 "uri": "tabTSqlAnalysis.html",
-                 "supportsTasks": ["06469d9b-b8cd-4a35-b7cd-f5051c158b62"]
+                 "uri": "tab.html",
+                 "supportsTasks": ["{{GUID PLACEHOLDER}}"]
             }
         },
         {
@@ -111,8 +107,8 @@
             ],
             "properties": {
                  "name": "T-Sql Analyzer",
-                 "uri": "tabTSqlAnalysisSummary.html",
-                 "supportsTasks": ["06469d9b-b8cd-4a35-b7cd-f5051c158b62"]
+                 "uri": "tabSummary.html",
+                 "supportsTasks": ["{{GUID PLACEHOLDER}}"]
             }
         }
     ]

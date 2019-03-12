@@ -2,7 +2,7 @@
     font-size: 1rem;
 }
 
-#tableParam th, #tableParam td {
+th, td {
     text-align: left;
     padding: 8px;
 }
@@ -11,7 +11,7 @@
     margin-bottom: 50px;
 }
 
-/* CONTAINER DEI PARAMETRI */
+/* PARAMETERS CONTAINER */
 .containerStats {
     display: flex;
     justify-content: left;
@@ -31,7 +31,7 @@
     height:100%;
 }
 
-/* CONTAINER DEI GRAFICI */
+/* GRAPHS CONTAINER */
 .containerGraphs {
     display: flex;
     justify-content: space-around;
@@ -60,7 +60,7 @@
     height:100%;
 }
 
-/* CONTAINER DELLE DICHIARAZIONI */
+/* DECLARATIONS CONTAINER */
 .containerDeclarations {
     display: flex;
     justify-content: left;
@@ -71,9 +71,4 @@
     height:100%;
     padding-left: 2%;
     margin-bottom: 1%;
-}
-
-#tableRes th, #tableRes td {
-    text-align: left;
-    padding: 8px;
 }

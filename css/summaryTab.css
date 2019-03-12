@@ -14,9 +14,5 @@
 }
 
 #tableSumWarn td, #tableSumRes td {
-    font-size: 0.8rem;
-}
-
-#titleSumRes, #titleSumWarn {
-    font-weight: bold;
+    font-size: 14px;
 }

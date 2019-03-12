@@ -26,6 +26,7 @@ export class InfoTab extends Controls.BaseControl {
 	/**
 	 * Initalize: print a different message for each build
 	 * result. If completed shows the results.
+	 * @param build Build to register
 	 */
 	private _initBuildStatus(build: TFS_Build_Contracts.Build) {
 		let buildStatus = TFS_Build_Contracts.BuildStatus;
@@ -41,7 +42,7 @@ export class InfoTab extends Controls.BaseControl {
 				build.result === buildResult.PartiallySucceeded ||
 				build.result === buildResult.Failed) {
 				textResBuild = "Analysis completed."
-				this.recoverAnalysisResult(build, (err: any, res: any) => {
+				this.getAnalysisResult(build, (err: any, res: any) => {
 					if (err)
 						throw err;
 					else if (res)
@@ -55,28 +56,27 @@ export class InfoTab extends Controls.BaseControl {
 				textResBuild = "Analysis not found.";
 			}
 		}
+
 		$("#spanRes").text(textResBuild);
 	}
 
 	/**
-	 * Recover list of attachments, contents and return as JSON
+	 * Get list of attachments, contents and return as JSON
+	 * @param build Build registered
+	 * @param callback Callback
 	 */
-	private recoverAnalysisResult(build: TFS_Build_Contracts.Build, callback: any): any {
-
+	private getAnalysisResult(build: TFS_Build_Contracts.Build, callback: any): any {
 		// Recover list of build attachments
 		let vsoContext = VSS.getWebContext();
 		let taskClient = DT_Client.getClient();
 		taskClient.getPlanAttachments(vsoContext.project.id, "build", build.orchestrationPlan.planId, "json").then((taskAttachments) => {
-
 			taskAttachments.forEach((taskAttachment) => {
 				if (taskAttachment._links && taskAttachment._links.self && taskAttachment._links.self.href && taskAttachment.name == "analysisResult") {
-
 					let attachmentName = taskAttachment.name;
 					let recId = taskAttachment.recordId;
 					let timelineId = taskAttachment.timelineId;
 					// Recover the attachment content in ArrayBuffer format
 					taskClient.getAttachmentContent(vsoContext.project.id, "build", build.orchestrationPlan.planId, timelineId, recId, "json", attachmentName).then((attachementContent) => {
-
 						let str = "";
 						let obj = {};
 						// Parse the attachment. ref: https://ourcodeworld.com/articles/read/164/how-to-convert-an-uint8array-to-string-in-javascript
@@ -102,6 +102,8 @@ export class InfoTab extends Controls.BaseControl {
 
 	/**
 	 * Transform ArrayBuffer into string, used for big dataset
+	 * @param uint8arr Arraybuffer
+	 * @param callback Callback
 	 */
 	private largeuint8ArrToString(uint8arr: any, callback: any) {
 		let bb = new Blob([uint8arr]);
@@ -115,6 +117,7 @@ export class InfoTab extends Controls.BaseControl {
 
 	/**
 	 * Calls all methods to show data results
+	 * @param data JSON results
 	 */
 	private showResults(data: any) {
 		this.showAnalysisParams(data);
@@ -126,6 +129,7 @@ export class InfoTab extends Controls.BaseControl {
 
 	/**
 	 * Insert params
+	 * @param data Anlysis parameters 
 	 */
 	private showAnalysisParams(data: any) {
 		$('#tableParam').append(
@@ -137,18 +141,14 @@ export class InfoTab extends Controls.BaseControl {
 				$('<td>').text(`Param 2`),
 				$('<td>').text(data.Param2),
 			),
-			$('<tr>').append(
-				$('<td>').text(`Param 3`),
-				$('<td>').text(data.Param3),
-			),
 		);
 	}
 
 	/**
 	 * Create warnings pie
+	 * @param data Array of declarations analyzed
 	 */
 	private showWarningsPie(data: any) {
-
 		$('.pieGraph').append(
 			$('<h2>').text('Warnings'),
 			$('<br>'),
@@ -157,14 +157,12 @@ export class InfoTab extends Controls.BaseControl {
 
 		let canvas = <HTMLCanvasElement>document.getElementById("myPieChart");
 		let ctx = canvas.getContext('2d');
-
 		let arrayLabels: string[] = ["Label1", "Label2", "Label3"];
 		let arrayColors: string[] = ['rgba(16, 124, 16, 1)', 'rgba(255, 255, 0, 1)', 'rgba(255, 0, 0, 1)'];
 		let arrayBorders: string[] = ['rgba(15, 113, 15, 1)', 'rgba(230, 230, 0, 1)', 'rgba(230, 0, 0, 1)'];
 		let arrayData: number[] = [0, 0, 0];
 		let arraySpareColors: string[] = ['rgba(0, 0, 255, 1)', 'rgba(255, 153, 0, 1)', 'rgba(0, 153, 153, 1)', 'rgba(153, 153, 102, 1)', 'rgba(184, 0, 230, 1)'];
 		let arraySpareBorders: string[] = ['rgba(0, 0, 230, 1)', 'rgba(230, 138, 0, 1)', 'rgba(0, 128, 128, 1)', 'rgba(138, 138, 92, 1)', 'rgba(163, 0, 204, 1)'];
-
 		data.forEach((element: any) => {
 			let add = true;
 			for (let i = 0; i < arrayLabels.length; i++) {
@@ -186,7 +184,6 @@ export class InfoTab extends Controls.BaseControl {
 			}
 		});
 
-		//Could not import types
 		let myPieChart = new Chart(ctx, {
 			type: 'pie',
 			data: {
@@ -209,7 +206,8 @@ export class InfoTab extends Controls.BaseControl {
 							let total = 0;
 							for (let i in allData) {
 								total += allData[i];
-							}
+							};
+
 							let tooltipPercentage = Math.round((tooltipData / total) * 100);
 							return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
 						}
@@ -217,13 +215,15 @@ export class InfoTab extends Controls.BaseControl {
 				}
 			}
 		});
+		
+		myPieChart.update();
 	}
 
 	/**
 	 * Create bar chart
+	 * @param data Array of analyzed declarations
 	 */
 	private showDeclarationsBar(data: any) {
-
 		$('.hBarGraph').append(
 			$('<h2>').text('Types of declarations analyzed'),
 			$('<br>'),
@@ -232,14 +232,12 @@ export class InfoTab extends Controls.BaseControl {
 
 		let canvas = <HTMLCanvasElement>document.getElementById("myBarChart")
 		let ctx = canvas.getContext('2d');
-
 		let arrayLabels: string[] = ["Functions", "Triggers", "Procedures", "Views"];
 		let arrayColors: string[] = ['rgba(16, 124, 16, 1)', 'rgba(255, 255, 0, 1)', 'rgba(255, 153, 0, 1)', 'rgba(0, 0, 255, 1)'];
 		let arrayBorders: string[] = ['rgba(15, 113, 15, 1)', 'rgba(230, 230, 0, 1)', 'rgba(230, 138, 0, 1)', 'rgba(0, 0, 230, 1)'];
 		let arrayData: number[] = [0, 0, 0, 0];
 		let arraySpareColors: string[] = ['rgba(0, 153, 153, 1)', 'rgba(153, 153, 102, 1)', 'rgba(255, 0, 0, 1)', 'rgba(184, 0, 230, 1)'];
 		let arraySpareBorders: string[] = ['rgba(0, 128, 128, 1)', 'rgba(138, 138, 92, 1)', 'rgba(230, 0, 0, 1)', 'rgba(163, 0, 204, 1)'];
-
 		data.forEach((element: any) => {
 			let add = true;
 			for (let i = 0; i < arrayLabels.length; i++) {
@@ -291,7 +289,8 @@ export class InfoTab extends Controls.BaseControl {
 							let total = 0;
 							for (let i in allData) {
 								total += allData[i];
-							}
+							};
+
 							let tooltipPercentage = Math.round((tooltipData / total) * 100);
 							return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
 						}
@@ -299,10 +298,13 @@ export class InfoTab extends Controls.BaseControl {
 				}
 			}
 		});
+		
+		myBarChart.update();
 	}
 
 	/**
 	 * Create a table with list of declarations
+	 * @param data Array of analyzed declarations
 	 */
 	private showDeclarationsTable(data: any) {
 		let table = $('#tableRes');

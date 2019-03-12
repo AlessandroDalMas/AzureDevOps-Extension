@@ -7,16 +7,15 @@ let levelError: string;
 let levelWarn: string;
 let tempLvErr: number = 0;
 let tempLvWarn: number = 0;
+let noBreak: boolean = true;
 
 // Rebuild the paths
 const taskJson = (<any>data);
 const versionData = taskJson.version;
-const versionString = versionData.Major + "." + versionData.Minor +
-    "." + versionData.Patch;
+const versionString = versionData.Major + "." + versionData.Minor + "." + versionData.Patch;
 const taskPath = taskJson.name + "_" + taskJson.id;
-const SQLAnalysisPath = tl.getVariable("Agent.WorkFolder") +
-    "\\_tasks\\" + taskPath + "\\" + versionString + "\\src";
-const SQLAnalysisDll = SQLAnalysisPath + "\\SqlAnalyzerDevOps.dll";
+const TSqlAnalyzerPath = tl.getVariable("Agent.WorkFolder") + "\\_tasks\\" + taskPath + "\\" + versionString + "\\src";
+const TSqlAnalyzerDll = TSqlAnalyzerPath + "\\TSqlAnalyzerDevOps.dll";
 
 function isNormalInteger(str: string) {
     return /^\+?(0|[1-9]\d*)$/.test(str);
@@ -27,6 +26,7 @@ function isNormalInteger(str: string) {
  */
 function run() {
     try {
+        noBreak = tl.getBoolInput("noBreak");
         // Testing parameters levels
         levelError = tl.getInput("levelError");
         levelWarn = tl.getInput("levelWarn");
@@ -64,14 +64,14 @@ function run() {
 }
 
 /**
- * Print SqlAnalyzer (internal tool integrated) version.
+ * Print T-Sql Analyzer (internal tool integrated) version.
  */
 function version() {
     tl.execSync("dotnet", [
-        SQLAnalysisDll,
+        TSqlAnalyzerDll,
         "-V"
     ], <trm.IExecSyncOptions>{
-        cwd: SQLAnalysisPath,
+        cwd: TSqlAnalyzerPath,
         env: {},
         silent: false,
         windowsVerbatimArguments: false,
@@ -84,27 +84,20 @@ function version() {
  * Execute the tool
  */
 function execute() {
-
     // Execute Sql-Analyzer tool
-    let esecuzione: trm.IExecSyncResult = tl.execSync("dotnet", [
-        SQLAnalysisDll,
-        "Path",
-        tl.getInput('path'),
-        "-v",
-        tl.getInput('version'),
-        "-lw",
-        levelWarn,
-        "-le",
-        levelError
-    ], <trm.IExecSyncOptions>{
-        cwd: SQLAnalysisPath,
+    let params: string[] = [TSqlAnalyzerDll, "Path", tl.getInput('path'), "-v", tl.getInput('version'), "-w", levelWarn, "-e", levelError];
+    if (noBreak) {
+        params.push("-n");
+    }
+
+    let esecuzione: trm.IExecSyncResult = tl.execSync("dotnet", params, <trm.IExecSyncOptions>{
+        cwd: TSqlAnalyzerPath,
         env: {},
         silent: false,
         windowsVerbatimArguments: false,
         errStream: process.stderr,
         outStream: process.stdout,
     });
-
     if (esecuzione.code != 0) {
         tl.setResult(tl.TaskResult.Failed, "Error during execution: " + esecuzione.code);
         return;
@@ -112,7 +105,7 @@ function execute() {
 
     try {
         // Look for JSON result file
-        let files = tl.findMatch(SQLAnalysisPath, ["[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]-[0-9][0-9]-[0-9][0-9].json"]);
+        let files = tl.findMatch(TSqlAnalyzerPath, ["[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]-[0-9][0-9]-[0-9][0-9].json"]);
 
         if (files.length == 0) {
             console.log("No JSON found.");
@@ -124,7 +117,6 @@ function execute() {
         // Other analysis could have generated other files and
         // the folder can be not cleaned.
         elaborateFile(files[files.length -1]);
-
     } catch (err) {
         console.log("There was an error while publishing and looking for results.");
         console.log(err);
@@ -135,10 +127,8 @@ function elaborateFile(data: string) {
     // Lettura file json ed analisi delle soglie
     fs.readJSON(data)
         .then((resJson: any) => {
-
             let counter: number = 0;
             resJson.Dichiarazioni.forEach((declaration: any) => {
-
                 counter++;
                 // Analyze results and create errors and warnings if needed
                 if (counter >= 10) {
@@ -161,7 +151,6 @@ function elaborateFile(data: string) {
                 tl.setResult(tl.TaskResult.SucceededWithIssues, `Error during attach`);
                 console.log(err);
             }
-
         })
         .catch((err) => {
             console.log("Error during JSON reading", err);

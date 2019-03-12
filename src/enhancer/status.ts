@@ -14,34 +14,26 @@ export class StatusSection extends Controls.BaseControl {
 	 */
 	public initialize(): void {
 		super.initialize();
-
 		// Recover parent extension configuration
 		let sharedConfig: TFS_Build_Extension_Contracts.IBuildResultsViewExtensionConfig = VSS.getConfiguration();
 		let vsoContext = VSS.getWebContext();
-
 		if (sharedConfig) {
-
 			// Register the extension to the host with callback
 			sharedConfig.onBuildChanged((build: TFS_Build_Contracts.Build) => {
 				let textResBuild = "Waiting analisys ..."
 				$("#spanSumRes").text(textResBuild);
-
 				// Recover list of build attachments
 				let taskClient = DT_Client.getClient();
 				taskClient.getPlanAttachments(vsoContext.project.id, "build", build.orchestrationPlan.planId, "json").then((taskAttachments) => {
-
 					taskAttachments.forEach(taskAttachment => {
 						if (taskAttachment._links && taskAttachment._links.self && taskAttachment._links.self.href && taskAttachment.name == "analysisResult") {
-
 							let attachmentName = taskAttachment.name;
 							let recId = taskAttachment.recordId;
 							let timelineId = taskAttachment.timelineId;
-
 							// Recover the attachment content in ArrayBuffer format
 							taskClient.getAttachmentContent(vsoContext.project.id, "build", build.orchestrationPlan.planId, timelineId, recId, "json", attachmentName).then((attachementContent) => {
 								let str = "";
 								let attachment = {};
-
 								// Parse the attachment. ref: https://ourcodeworld.com/articles/read/164/how-to-convert-an-uint8array-to-string-in-javascript
 								if (TextDecoder) {
 									console.log("TextDecoder found");
@@ -68,15 +60,14 @@ export class StatusSection extends Controls.BaseControl {
 	/**
 	 * Initalize: print a different message for each build
 	 * result. If completed shows a summary.
+	 * @param build Build to register to
+	 * @param aggregato JSON analysis result
 	 */
 	private _initBuildStatus(build: TFS_Build_Contracts.Build, attachment: any) {
-		
 		let buildStatus = TFS_Build_Contracts.BuildStatus;
 		let buildResult = TFS_Build_Contracts.BuildResult;
 		let textResBuild = "Waiting analysis..."
-
 		$("#spanSumRes").text(textResBuild);
-
 		if (build.status === buildStatus.InProgress) {
 			textResBuild = "Analysis ongoing...";
 		}
@@ -95,12 +86,14 @@ export class StatusSection extends Controls.BaseControl {
 				textResBuild = "Analysis not found.";
 			}
 		}
+
 		$("#spanSumRes").text(textResBuild);
 		VSS.resize();
 	}
 
 	/**
 	 * Show results summary
+	 * @param attachment JSON analysis result
 	 */
 	private initResults(attachment: any) {
 		// Elaborate your attachment here
@@ -108,6 +101,8 @@ export class StatusSection extends Controls.BaseControl {
 
 	/**
 	 * Transform ArrayBuffer into string, used for big dataset
+	 * @param uint8arr Arraybuffer
+	 * @param callback Callback
 	 */
 	private largeuint8ArrToString(uint8arr: any, callback: any) {
 		let bb = new Blob([uint8arr]);
