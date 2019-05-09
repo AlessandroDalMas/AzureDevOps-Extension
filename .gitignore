@@ -330,3 +330,4 @@ ASALocalRun/
 
 # File dell'estensione da caricare
 *.vsix
+node_modules
