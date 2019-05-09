@@ -9,11 +9,11 @@
     "author": "Alessandro Dal Mas",
     "license": "ISC",
     "devDependencies": {
-        "@types/q": "1.5.1",
-        "azure-pipelines-task-lib": "2.7.7"
+        "@types/q": "1.5.2",
+        "azure-pipelines-task-lib": "2.8.0"
     },
     "dependencies": {
-        "@types/fs-extra": "5.0.5",
+        "@types/fs-extra": "5.1.0",
         "fs-extra": "7.0.1"
     }
 }
